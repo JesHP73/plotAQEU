@@ -8,9 +8,17 @@ Original file is located at
 """
 
 import plotly.express as px
+import pandas as pd
+
+#!pip install plotly
+
+#!pip install streamlit
+
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+!pip install plotly
+
 
 # Read the CSV file directly from the GitHub URL
 url = 'https://raw.githubusercontent.com/JesHP73/plotAQEU/78dd92e3c98710a024cb332c6b753fd99aceac64/plot_aqi_df.csv'
