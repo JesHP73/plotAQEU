@@ -4,8 +4,8 @@ import pandas as pd
 import plotly.express as px
 
 # Load your data
-# Replace with the actual path to your CSV file
-plot_aqi_df = pd.read_csv('https://github.com/JesHP73/plotAQEU/blob/2cd8420dd7027b74a520eb8eac04a36ca9cb705b/plot_aqi_df.csv')
+plot_aqi_df = pd.read_csv('https://raw.githubusercontent.com/JesHP73/plotAQEU/2cd8420dd7027b74a520eb8eac04a36ca9cb705b/plot_aqi_df.csv')
+
 
 # Calculate the mean AQI per year for each country
 mean_aqi_per_country = plot_aqi_df.groupby(['year', 'country'])['AQI'].mean().reset_index()
