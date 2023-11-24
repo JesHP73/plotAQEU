@@ -59,7 +59,7 @@ who_guidelines = {
 # Load your data from GitHub
 @st.cache
 def load_data():
-    url = 'eu_dataset_cleaned/aggregated_data_eu_air_quality.csv' 
+    url = 'https://github.com/JesHP73/plotAQEU/blob/203fa4c279cc3b606ce49b1432593348e1fbd9ad/eu_dataset_cleaned/aggregated_data_eu_air_quality.csv' 
     df = pd.read_csv(url)
     df['WHO Guideline'] = df['air_pollutant'].map(lambda x: who_guidelines.get(x, 0))
     return df
