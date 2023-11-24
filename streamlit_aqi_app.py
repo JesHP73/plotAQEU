@@ -10,7 +10,6 @@ from io import StringIO
 # Load your data
 plot_aqi_df = pd.read_csv('https://raw.githubusercontent.com/JesHP73/plotAQEU/2cd8420dd7027b74a520eb8eac04a36ca9cb705b/plot_aqi_df.csv')
 
-
 # Calculate the mean AQI per year for each country
 mean_aqi_per_country = plot_aqi_df.groupby(['year', 'country'])['AQI'].mean().reset_index()
 mean_aqi_per_country['year'] = pd.to_datetime(mean_aqi_per_country['year'], format='%Y')
@@ -49,7 +48,6 @@ filtered_data = filter_data(selected_countries)
 display_chart(filtered_data)
 
 
-
 # Define the WHO guideline values
 who_guidelines = {
     'NO2': 10,  # µg/m3 annual average
@@ -59,23 +57,9 @@ who_guidelines = {
     'CO': 4  # mg/m3 maximum daily 8-hour mean (or your approximation for annual average)
 }
 
-@st.cache
-def load_data():
-    # Make sure this URL is the raw version of the file on GitHub
-    url = 'https://raw.githubusercontent.com/JesHP73/plotAQEU/main/eu_dataset_cleaned/aggregated_data_eu_air_quality.csv'
-    response = requests.get(url)
-    if response.status_code == 200:
-        csv_raw = StringIO(response.content.decode('utf-8'))
-        df = pd.read_csv(csv_raw)
-        df['WHO Guideline'] = df['air_pollutant'].map(lambda x: who_guidelines.get(x, 0))
-        return df
-    else:
-        response.raise_for_status()
-
-try:
-    plot_data = load_data()
-except requests.exceptions.HTTPError as e:
-    st.error(f'Error fetching the CSV file: {e}')
+# Load your data
+df = pd.read_csv('https://raw.githubusercontent.com/JesHP73/plotAQEU/main/eu_dataset_cleaned/aggregated_data_eu_air_quality.csv')
+df['WHO Guideline'] = df['air_pollutant'].map(lambda x: who_guidelines.get(x, 0))
 
 # If the data is loaded correctly, then proceed with plotting
 if 'plot_data' in locals():
