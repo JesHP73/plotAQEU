@@ -4,6 +4,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+import requests
+from io import StringIO
 
 # Load your data
 plot_aqi_df = pd.read_csv('https://raw.githubusercontent.com/JesHP73/plotAQEU/2cd8420dd7027b74a520eb8eac04a36ca9cb705b/plot_aqi_df.csv')
@@ -56,13 +58,25 @@ who_guidelines = {
     'CO': 4  # mg/m3 maximum daily 8-hour mean (or your approximation for annual average)
 }
 
-# Load your data from GitHub
+
 @st.cache
 def load_data():
-    url = 'https://github.com/JesHP73/plotAQEU/blob/203fa4c279cc3b606ce49b1432593348e1fbd9ad/eu_dataset_cleaned/aggregated_data_eu_air_quality.csv' 
-    df = pd.read_csv(url)
-    df['WHO Guideline'] = df['air_pollutant'].map(lambda x: who_guidelines.get(x, 0))
-    return df
+    url = 'https://github.com/JesHP73/plotAQEU/blob/203fa4c279cc3b606ce49b1432593348e1fbd9ad/eu_dataset_cleaned/aggregated_data_eu_air_quality.csv'  # Replace with your actual GitHub URL
+    headers = {'Accept': 'application/vnd.github.v3.raw'}  # Ensures you get the raw content from GitHub
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        csv_raw = StringIO(response.content.decode('utf-8'))
+        df = pd.read_csv(csv_raw)
+        df['WHO Guideline'] = df['air_pollutant'].map(lambda x: who_guidelines.get(x, 0))
+        return df
+    else:
+        response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+
+try:
+    plot_data = load_data()
+    st.write(plot_data)  # This will display the DataFrame in Streamlit if the data is loaded correctly.
+except requests.exceptions.HTTPError as e:
+    st.error(f'Error fetching the CSV file: {e}')
 
 plot_data = load_data()
 
